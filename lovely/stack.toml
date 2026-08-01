@@ -1,0 +1,74 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 10
+
+# The Wheel of Fortune only accepts jokers without an edition. Any joker that can
+# still take one more edition is a valid target once editions stack.
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''
+if self.ability.name == 'The Wheel of Fortune' then
+            self.eligible_strength_jokers = EMPTY(self.eligible_strength_jokers)
+            for k, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not v.edition) then
+'''
+position = "at"
+payload = '''
+if self.ability.name == 'The Wheel of Fortune' then
+            self.eligible_strength_jokers = EMPTY(self.eligible_strength_jokers)
+            for k, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not StackedEditions or StackedEditions.can_take_more(v)) then
+'''
+match_indent = true
+
+# Ectoplasm and Hex apply one specific edition, so their pool skips jokers that
+# could not receive it -- otherwise the card is usable but does nothing.
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''
+if self.ability.name == 'Ectoplasm' or self.ability.name == 'Hex' then
+            self.eligible_editionless_jokers = EMPTY(self.eligible_editionless_jokers)
+            for k, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not v.edition) then
+'''
+position = "at"
+payload = '''
+if self.ability.name == 'Ectoplasm' or self.ability.name == 'Hex' then
+            self.eligible_editionless_jokers = EMPTY(self.eligible_editionless_jokers)
+            local _stked_key = self.ability.name == 'Hex' and 'e_polychrome' or 'e_negative'
+            for k, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not StackedEditions or StackedEditions.can_apply(v, _stked_key)) then
+'''
+match_indent = true
+
+# Prefix the edition badge with a count when the same edition is stacked
+# ("2X Polychrome"). Patched at the render site so tooltips and badge colours
+# keep working untouched. G.UIDEF.card_h_popup(card) -> card is in scope.
+# Regex, not an exact match: Steamodded appends further arguments to this call
+# (it added SMODS.get_badge_text_colour), which silently broke a literal pattern.
+[[patches]]
+[patches.regex]
+target = "functions/UI_definitions.lua"
+pattern = '(?<indent>[\t ]*)badges\[#badges \+ 1\] = create_badge\(localize\(v, "labels"\), (?<rest>.*)\)\n'
+position = "at"
+line_prepend = "$indent"
+payload = '''
+local _stked_label = localize(v, "labels")
+local _stked_n = StackedEditions and StackedEditions.badge_count(card, v)
+if _stked_n and _stked_n > 1 then
+    _stked_label = string.format(StackedEditions.L('stked_badge_count', '%sX '), _stked_n) .. _stked_label
+end
+badges[#badges + 1] = create_badge(_stked_label, $rest)
+'''
+
+# Aura: allow use on a playing card that already has an edition.
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if G.hand and (#G.hand.highlighted == 1) and G.hand.highlighted[1] and (not G.hand.highlighted[1].edition) then return true end"
+position = "at"
+payload = "if G.hand and (#G.hand.highlighted == 1) and G.hand.highlighted[1] then return true end"
+match_indent = true

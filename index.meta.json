@@ -1,0 +1,11 @@
+{
+  "title": "Stacked Editions",
+  "requires-steamodded": true,
+  "requires-talisman": false,
+  "categories": ["Content"],
+  "author": "ba11e",
+  "repo": "https://github.com/ba11e-mos/balatro-stacked-editions",
+  "downloadURL": "https://github.com/ba11e-mos/balatro-stacked-editions/releases/latest/download/StackedEditions.zip",
+  "folderName": "StackedEditions",
+  "automatic-version-check": true
+}
