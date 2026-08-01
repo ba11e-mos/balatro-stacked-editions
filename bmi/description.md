@@ -1,5 +1,7 @@
 # Stacked Editions
 
+[Download on Nexus Mods](https://www.nexusmods.com/balatro/mods/900)
+
 A Balatro mod that lets one card hold **several editions at once** — Foil + Holo +
 Polychrome + Negative, plus any modded edition. Every edition's effect, shader and
 badge applies.
