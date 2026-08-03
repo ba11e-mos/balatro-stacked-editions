@@ -1,6 +1,6 @@
 # Stacked Editions
 
-[Download on Nexus Mods](https://www.nexusmods.com/balatro/mods/900)
+[![Downloads](https://img.shields.io/github/downloads/ba11e-mos/balatro-stacked-editions/total?label=downloads&color=brightgreen)](https://github.com/ba11e-mos/balatro-stacked-editions/releases/latest)
 
 A Balatro mod that lets one card hold **several editions at once** — Foil + Holo +
 Polychrome + Negative, plus any modded edition. Every edition's effect, shader and
@@ -29,7 +29,11 @@ Negatives add up too.
 
 ## Install
 
-Put the `StackedEditions` folder in your Balatro `Mods` folder:
+The easiest way is [Balatro Mod Manager](https://github.com/skyline69/balatro-mod-manager),
+which installs and updates the mod for you.
+
+To do it by hand, download the zip from [Releases](https://github.com/ba11e-mos/balatro-stacked-editions/releases/latest)
+and put the `StackedEditions` folder in your Balatro `Mods` folder:
 
 | OS | Path |
 | --- | --- |
